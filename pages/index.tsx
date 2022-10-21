@@ -77,6 +77,7 @@ const Home: NextPage = () => {
 
       <Box sx={{ width: !isMobile ? '100%' : '40%', border: '1px solid #2b2b2b', borderRadius: 5, mx: 'auto', my: 2, px: 'auto' }}>
         {checked ? <QrReader
+          key={'user'}
           constraints={{ facingMode: 'user' }}
           scanDelay={100}
           onResult={(result, error) => {
@@ -90,6 +91,7 @@ const Home: NextPage = () => {
           }}
           videoContainerStyle={{ width: '100%' }}
         /> : <QrReader
+          key={'environment'}
           constraints={{ facingMode: 'environment' }}
           scanDelay={100}
           onResult={(result, error) => {
