@@ -135,7 +135,7 @@ const Home: NextPage = () => {
               <Box sx={{ mb: 2 }}>
                 {getUsersRandom.isSuccess ? <CheckCircle color={'success'} fontSize={'large'} /> : <CloseRounded color={'error'} fontSize={'large'} />}
               </Box>
-              <Box sx={{ mb: 2 }}>
+              <Box>
                 <Typography align={'center'} fontWeight={600} variant={"h6"}>
                   {user.length > 0 ? user[0]?.name.title + ' ' + user[0]?.name.first + ' ' + user[0]?.name.last : 'No Results'}
                 </Typography>
