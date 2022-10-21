@@ -60,7 +60,7 @@ const Home: NextPage = () => {
   const [data, setData] = useState('No result');
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.up("sm"));
-  const [checked, setChecked] = React.useState(true);
+  const [checked, setChecked] = React.useState(false);
 
   const handleChecked = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
@@ -76,8 +76,8 @@ const Home: NextPage = () => {
 
 
       <Box sx={{ width: !isMobile ? '100%' : '40%', border: '1px solid #2b2b2b', borderRadius: 5, mx: 'auto', my: 2, px: 'auto' }}>
-        <QrReader
-          constraints={{ facingMode: checked ? 'user' : 'environment' }}
+        {checked ? <QrReader
+          constraints={{ facingMode: 'user' }}
           scanDelay={100}
           onResult={(result, error) => {
             if (!!result) {
@@ -89,11 +89,24 @@ const Home: NextPage = () => {
             }
           }}
           videoContainerStyle={{ width: '100%' }}
-        />
+        /> : <QrReader
+          constraints={{ facingMode: 'environment' }}
+          scanDelay={100}
+          onResult={(result, error) => {
+            if (!!result) {
+              setData(result.getText());
+            }
+
+            if (!!error) {
+              console.info(error);
+            }
+          }}
+          videoContainerStyle={{ width: '100%' }}
+        />}
         <Box sx={{ width: '100%', mb: 2 }}>
           <FormControlLabel
             control={<IOSSwitch checked={checked} onChange={handleChecked} sx={{ m: 1 }} />}
-            label="Switch Camera"
+            label={checked ? "Switch Rare Camera" : "Switch Front Camera"}
             sx={{ mx: 'auto' }}
           />
         </Box>
