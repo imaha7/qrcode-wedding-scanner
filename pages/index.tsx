@@ -3,7 +3,7 @@ import Head from 'next/head'
 import React, { useState, useRef } from 'react';
 import { QrReader } from 'react-qr-reader';
 import { Box, CircularProgress, FormControlLabel, Switch, SwitchProps, ToggleButton, Typography, styled, useMediaQuery, useTheme } from '@mui/material';
-import { Camera } from '@mui/icons-material';
+import { CheckCircle, CloseRounded } from '@mui/icons-material';
 import { getUsers } from "../actions/userAction";
 import { useMutation } from "@tanstack/react-query";
 
@@ -104,6 +104,7 @@ const Home: NextPage = () => {
             }
           }}
           videoContainerStyle={{ width: '100%' }}
+          videoStyle={{ width: '100%' }}
         /> : <QrReader
           key={'environment'}
           constraints={{ facingMode: 'environment' }}
@@ -117,6 +118,7 @@ const Home: NextPage = () => {
             }
           }}
           videoContainerStyle={{ width: '100%' }}
+          videoStyle={{ width: '100%' }}
         />}
         <Box sx={{ width: '100%', textAlign: 'center', mb: 2 }}>
           <FormControlLabel
@@ -127,7 +129,24 @@ const Home: NextPage = () => {
         </Box>
       </Box>
       <Box sx={{ textAlign: 'center' }}>
-        {getUsersRandom.isLoading ? <CircularProgress /> : <Typography align={'center'} variant={"body1"}>{user.length > 0 ? user[0]?.name.title + ' ' + user[0]?.name.first + ' ' + user[0]?.name.last : 'No Results'}</Typography>}
+        {getUsersRandom.isLoading ? <CircularProgress /> :
+          (getUsersRandom.isSuccess || getUsersRandom.isError ?
+            <Box>
+              <Box sx={{ mb: 2 }}>
+                {getUsersRandom.isSuccess ? <CheckCircle color={'success'} fontSize={'large'} /> : <CloseRounded color={'error'} fontSize={'large'} />}
+              </Box>
+              <Box sx={{ mb: 2 }}>
+                <Typography align={'center'} variant={"body1"}>
+                  {user.length > 0 ? user[0]?.name.title + ' ' + user[0]?.name.first + ' ' + user[0]?.name.last : 'No Results'}
+                </Typography>
+              </Box>
+              <Box>
+                <Typography align={'center'} variant={"body1"}>
+                  {getUsersRandom.isSuccess ? 'Telah Hadir' : 'Gagal Mengubah Status Hadir, Silahkan Coba Lagi!'}
+                </Typography>
+              </Box>
+            </Box> : null)
+        }
       </Box>
     </Box>
   )
