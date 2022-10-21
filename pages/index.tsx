@@ -63,7 +63,7 @@ const Home: NextPage = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.up("sm"));
   const [checked, setChecked] = React.useState(false);
-  const [user, setUser] = React.useState([]);
+  const [user, setUser] = React.useState<any>([]);
 
   const handleChecked = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
