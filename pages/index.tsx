@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { QrReader } from 'react-qr-reader';
 import { Box, CircularProgress, FormControlLabel, Switch, SwitchProps, ToggleButton, Typography, styled, useMediaQuery, useTheme } from '@mui/material';
 import { CheckCircle, CloseRounded } from '@mui/icons-material';
@@ -63,6 +63,8 @@ const Home: NextPage = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.up("sm"));
   const [checked, setChecked] = React.useState(false);
+  const [longitude, setLongitude] = React.useState<any>('');
+  const [latitude, setLatitude] = React.useState<any>('');
   const [user, setUser] = React.useState<any>([]);
 
   const handleChecked = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,6 +83,15 @@ const Home: NextPage = () => {
     },
   });
 
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(function (position) {
+      setLatitude(position.coords.latitude);
+      setLongitude(position.coords.longitude);
+      console.log((position.coords.latitude).toString());
+      console.log((position.coords.longitude).toString());
+    });
+  });
+
   return (
     <Box sx={{ px: 2, py: 'auto' }}>
       <Head>
@@ -90,63 +101,146 @@ const Home: NextPage = () => {
       </Head>
 
 
-      <Box sx={{ width: !isMobile ? '100%' : '40%', border: '1px solid #2b2b2b', borderRadius: 5, mx: 'auto', mt: 2, mb: 5, px: 'auto' }}>
-        {checked ? <QrReader
-          key={'user'}
-          constraints={{ facingMode: 'user' }}
-          scanDelay={100}
-          onResult={(result, error) => {
-            if (result) {
-              setData(result.getText());
-              getUsersRandom.mutate();
-            } else {
-              console.error(error);
-            }
-          }}
-          videoContainerStyle={{ width: '100%' }}
-          videoStyle={{ width: '100%' }}
-        /> : <QrReader
-          key={'environment'}
-          constraints={{ facingMode: 'environment' }}
-          scanDelay={100}
-          onResult={(result, error) => {
-            if (result) {
-              setData(result.getText());
-              getUsersRandom.mutate();
-            } else {
-              console.error(error);
-            }
-          }}
-          videoContainerStyle={{ width: '100%' }}
-          videoStyle={{ width: '100%' }}
-        />}
-        <Box sx={{ width: '100%', textAlign: 'center', mb: 2 }}>
-          <FormControlLabel
-            control={<IOSSwitch checked={checked} onChange={handleChecked} sx={{ m: 1 }} />}
-            label={checked ? "Switch Rare Camera" : "Switch Front Camera"}
-            sx={{ mx: 'auto' }}
-          />
-        </Box>
-      </Box>
-      <Box sx={{ textAlign: 'center' }}>
-        {getUsersRandom.isLoading ? <CircularProgress /> :
-          (getUsersRandom.isSuccess || getUsersRandom.isError ?
+      {/* 3.551920 */}
+      {/* 98.713588 */}
+      {/* {(latitude.toString() !== '-6.1752330340965225' && longitude.toString() !== '106.78996000922123') ?
+        <Box sx={{ width: '100%', textAlign: 'center', py: 3 }}>
+          <Box>
+            <Box sx={{ mb: 2 }}>
+              <CloseRounded color={'error'} fontSize={'large'} />
+            </Box>
             <Box>
-              <Box sx={{ mb: 2 }}>
-                {getUsersRandom.isSuccess ? <CheckCircle color={'success'} fontSize={'large'} /> : <CloseRounded color={'error'} fontSize={'large'} />}
-              </Box>
+              <Typography align={'center'} fontWeight={600} variant={"h6"}>
+                Sorry, you&apos;re not in the wedding location right now.
+              </Typography>
+            </Box>
+            <Box>
+              <Typography align={'center'} variant={"subtitle1"}>
+                Please try again when you are in the wedding location, thank you!
+              </Typography>
+            </Box>
+          </Box>
+        </Box> :
+        <Box>
+          <Box sx={{ width: !isMobile ? '100%' : '40%', border: '1px solid #2b2b2b', borderRadius: 5, mx: 'auto', mt: 2, mb: 5, px: 'auto' }}>
+            {checked ? <QrReader
+              key={'user'}
+              constraints={{ facingMode: 'user' }}
+              scanDelay={100}
+              onResult={(result, error) => {
+                if (result) {
+                  setData(result.getText());
+                  getUsersRandom.mutate();
+                } else {
+                  console.error(error);
+                }
+              }}
+              videoContainerStyle={{ width: '100%' }}
+              videoStyle={{ width: '100%' }}
+            /> : <QrReader
+              key={'environment'}
+              constraints={{ facingMode: 'environment' }}
+              scanDelay={100}
+              onResult={(result, error) => {
+                if (result) {
+                  setData(result.getText());
+                  getUsersRandom.mutate();
+                } else {
+                  console.error(error);
+                }
+              }}
+              videoContainerStyle={{ width: '100%' }}
+              videoStyle={{ width: '100%' }}
+            />}
+            <Box sx={{ width: '100%', textAlign: 'center', mb: 2 }}>
+              <FormControlLabel
+                control={<IOSSwitch checked={checked} onChange={handleChecked} sx={{ m: 1 }} />}
+                label={checked ? "Switch Rare Camera" : "Switch Front Camera"}
+                sx={{ mx: 'auto' }}
+              />
+            </Box>
+          </Box>
+          <Box sx={{ textAlign: 'center' }}>
+            {getUsersRandom.isLoading ? <CircularProgress /> :
+              (getUsersRandom.isSuccess || getUsersRandom.isError ?
+                <Box>
+                  <Box sx={{ mb: 2 }}>
+                    {getUsersRandom.isSuccess ? <CheckCircle color={'success'} fontSize={'large'} /> : <CloseRounded color={'error'} fontSize={'large'} />}
+                  </Box>
+                  <Box>
+                    <Typography align={'center'} fontWeight={600} variant={"h6"}>
+                      {user.length > 0 ? user[0]?.name.title + ' ' + user[0]?.name.first + ' ' + user[0]?.name.last : 'No Results'}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography align={'center'} variant={"subtitle1"}>
+                      {getUsersRandom.isSuccess ? 'Telah Hadir' : 'Gagal Mengubah Status Hadir, Silahkan Coba Lagi!'}
+                    </Typography>
+                  </Box>
+                </Box> : null)
+            }
+          </Box>
+        </Box>
+      } */}
+      <Box>
+        <Box sx={{ width: !isMobile ? '100%' : '40%', border: '1px solid #2b2b2b', borderRadius: 5, mx: 'auto', mt: 2, mb: 5, px: 'auto' }}>
+          {checked ? <QrReader
+            key={'user'}
+            constraints={{ facingMode: 'user' }}
+            scanDelay={100}
+            onResult={(result, error) => {
+              if (result) {
+                setData(result.getText());
+                getUsersRandom.mutate();
+              } else {
+                console.error(error);
+              }
+            }}
+            videoContainerStyle={{ width: '100%' }}
+            videoStyle={{ width: '100%' }}
+          /> : <QrReader
+            key={'environment'}
+            constraints={{ facingMode: 'environment' }}
+            scanDelay={100}
+            onResult={(result, error) => {
+              if (result) {
+                setData(result.getText());
+                getUsersRandom.mutate();
+              } else {
+                console.error(error);
+              }
+            }}
+            videoContainerStyle={{ width: '100%' }}
+            videoStyle={{ width: '100%' }}
+          />}
+          <Box sx={{ width: '100%', textAlign: 'center', mb: 2 }}>
+            <FormControlLabel
+              control={<IOSSwitch checked={checked} onChange={handleChecked} sx={{ m: 1 }} />}
+              label={checked ? "Switch Rare Camera" : "Switch Front Camera"}
+              sx={{ mx: 'auto' }}
+            />
+          </Box>
+        </Box>
+        <Box sx={{ textAlign: 'center' }}>
+          {getUsersRandom.isLoading ? <CircularProgress /> :
+            (getUsersRandom.isSuccess || getUsersRandom.isError ?
               <Box>
-                <Typography align={'center'} fontWeight={600} variant={"h6"}>
-                  {user.length > 0 ? user[0]?.name.title + ' ' + user[0]?.name.first + ' ' + user[0]?.name.last : 'No Results'}
-                </Typography>
-              </Box>
-              <Box>
-                <Typography align={'center'} variant={"subtitle1"}>
-                  {getUsersRandom.isSuccess ? 'Telah Hadir' : 'Gagal Mengubah Status Hadir, Silahkan Coba Lagi!'}
-                </Typography>
-              </Box>
-            </Box> : null)
-        }
+                <Box sx={{ mb: 2 }}>
+                  {getUsersRandom.isSuccess ? <CheckCircle color={'success'} fontSize={'large'} /> : <CloseRounded color={'error'} fontSize={'large'} />}
+                </Box>
+                <Box>
+                  <Typography align={'center'} fontWeight={600} variant={"h6"}>
+                    {user.length > 0 ? user[0]?.name.title + ' ' + user[0]?.name.first + ' ' + user[0]?.name.last : 'No Results'}
+                  </Typography>
+                </Box>
+                <Box>
+                  <Typography align={'center'} variant={"subtitle1"}>
+                    {getUsersRandom.isSuccess ? 'Telah Hadir' : 'Gagal Mengubah Status Hadir, Silahkan Coba Lagi!'}
+                  </Typography>
+                </Box>
+              </Box> : null)
+          }
+        </Box>
       </Box>
     </Box>
   )
