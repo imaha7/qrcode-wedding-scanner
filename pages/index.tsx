@@ -21,7 +21,7 @@ const Home: NextPage = () => {
 
       <Box sx={{ width: !isMobile ? '100%' : '40%', border: '1px solid #2b2b2b', borderRadius: 5, mx: 'auto', my: 2 }}>
         <QrReader
-          constraints={{ facingMode: 'user' }}
+          constraints={{ facingMode: 'environment' }}
           scanDelay={100}
           onResult={(result, error) => {
             if (!!result) {
