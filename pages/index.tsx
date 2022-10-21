@@ -90,7 +90,7 @@ const Home: NextPage = () => {
       </Head>
 
 
-      <Box sx={{ width: !isMobile ? '100%' : '40%', border: '1px solid #2b2b2b', borderRadius: 5, mx: 'auto', my: 2, px: 'auto' }}>
+      <Box sx={{ width: !isMobile ? '100%' : '40%', border: '1px solid #2b2b2b', borderRadius: 5, mx: 'auto', mt: 2, mb: 5, px: 'auto' }}>
         {checked ? <QrReader
           key={'user'}
           constraints={{ facingMode: 'user' }}
@@ -136,12 +136,12 @@ const Home: NextPage = () => {
                 {getUsersRandom.isSuccess ? <CheckCircle color={'success'} fontSize={'large'} /> : <CloseRounded color={'error'} fontSize={'large'} />}
               </Box>
               <Box sx={{ mb: 2 }}>
-                <Typography align={'center'} variant={"body1"}>
+                <Typography align={'center'} fontWeight={600} variant={"h6"}>
                   {user.length > 0 ? user[0]?.name.title + ' ' + user[0]?.name.first + ' ' + user[0]?.name.last : 'No Results'}
                 </Typography>
               </Box>
               <Box>
-                <Typography align={'center'} variant={"body1"}>
+                <Typography align={'center'} variant={"subtitle1"}>
                   {getUsersRandom.isSuccess ? 'Telah Hadir' : 'Gagal Mengubah Status Hadir, Silahkan Coba Lagi!'}
                 </Typography>
               </Box>
