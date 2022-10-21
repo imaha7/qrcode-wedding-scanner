@@ -96,14 +96,12 @@ const Home: NextPage = () => {
           constraints={{ facingMode: 'user' }}
           scanDelay={100}
           onResult={(result, error) => {
-            if (!!result) {
+            if (result) {
               setData(result.getText());
+              getUsersRandom.mutate();
+            } else {
+              console.error(error);
             }
-
-            if (!!error) {
-              console.info(error);
-            }
-            getUsersRandom.mutate();
           }}
           videoContainerStyle={{ width: '100%' }}
         /> : <QrReader
