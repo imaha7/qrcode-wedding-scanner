@@ -1,9 +1,11 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { QrReader } from 'react-qr-reader';
-import { Box, FormControlLabel, Switch, SwitchProps, ToggleButton, Typography, styled, useMediaQuery, useTheme } from '@mui/material';
+import { Box, CircularProgress, FormControlLabel, Switch, SwitchProps, ToggleButton, Typography, styled, useMediaQuery, useTheme } from '@mui/material';
 import { Camera } from '@mui/icons-material';
+import { getUsers } from "../actions/userAction";
+import { useMutation } from "@tanstack/react-query";
 
 const IOSSwitch = styled((props: SwitchProps) => (
   <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
@@ -61,10 +63,23 @@ const Home: NextPage = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.up("sm"));
   const [checked, setChecked] = React.useState(false);
+  const [user, setUser] = React.useState([]);
 
   const handleChecked = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
   };
+
+  const getUsersRandom = useMutation(() => getUsers(), {
+    onMutate: () => {
+      return {};
+    },
+    onSuccess: (response) => {
+      setUser(response.results);
+    },
+    onError: (error) => {
+      console.log("error", error);
+    },
+  });
 
   return (
     <Box sx={{ px: 2, py: 'auto' }}>
@@ -88,6 +103,7 @@ const Home: NextPage = () => {
             if (!!error) {
               console.info(error);
             }
+            getUsersRandom.mutate();
           }}
           videoContainerStyle={{ width: '100%' }}
         /> : <QrReader
@@ -95,17 +111,16 @@ const Home: NextPage = () => {
           constraints={{ facingMode: 'environment' }}
           scanDelay={100}
           onResult={(result, error) => {
-            if (!!result) {
+            if (result) {
               setData(result.getText());
-            }
-
-            if (!!error) {
-              console.info(error);
+              getUsersRandom.mutate();
+            } else {
+              console.error(error);
             }
           }}
           videoContainerStyle={{ width: '100%' }}
         />}
-        <Box sx={{ width: '100%', mb: 2 }}>
+        <Box sx={{ width: '100%', textAlign: 'center', mb: 2 }}>
           <FormControlLabel
             control={<IOSSwitch checked={checked} onChange={handleChecked} sx={{ m: 1 }} />}
             label={checked ? "Switch Rare Camera" : "Switch Front Camera"}
@@ -113,7 +128,9 @@ const Home: NextPage = () => {
           />
         </Box>
       </Box>
-      <Typography align={'center'} variant={"body1"}>{data}</Typography>
+      <Box sx={{ textAlign: 'center' }}>
+        {getUsersRandom.isLoading ? <CircularProgress /> : <Typography align={'center'} variant={"body1"}>{user.length > 0 ? user[0]?.name.title + ' ' + user[0]?.name.first + ' ' + user[0]?.name.last : 'No Results'}</Typography>}
+      </Box>
     </Box>
   )
 }
