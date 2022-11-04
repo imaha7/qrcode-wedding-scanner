@@ -244,7 +244,7 @@ const Home: NextPage = () => {
           <Box>
             <Typography align={'center'} fontWeight={600} variant={"h6"}>
               {/* {user.length > 0 ? user[0]?.name.title + ' ' + user[0]?.name.first + ' ' + user[0]?.name.last : 'No Results'} */}
-              {data ? data : 'No Results'}
+              {data}
             </Typography>
           </Box>
         </Box>
