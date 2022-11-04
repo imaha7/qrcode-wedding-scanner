@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { QrReader } from 'react-qr-reader';
 import { Box, CircularProgress, FormControlLabel, Switch, SwitchProps, ToggleButton, Typography, styled, useMediaQuery, useTheme } from '@mui/material';
 import { CheckCircle, CloseRounded } from '@mui/icons-material';
-import { getUsers } from "../actions/userAction";
+// import { getUsers } from "../actions/userAction";
 import { useMutation } from "@tanstack/react-query";
 
 const IOSSwitch = styled((props: SwitchProps) => (
@@ -71,26 +71,26 @@ const Home: NextPage = () => {
     setChecked(event.target.checked);
   };
 
-  const getUsersRandom = useMutation(() => getUsers(), {
-    onMutate: () => {
-      return {};
-    },
-    onSuccess: (response) => {
-      setUser(response.results);
-    },
-    onError: (error) => {
-      console.log("error", error);
-    },
-  });
+  // const getUsersRandom = useMutation(() => getUsers(), {
+  //   onMutate: () => {
+  //     return {};
+  //   },
+  //   onSuccess: (response) => {
+  //     setUser(response.results);
+  //   },
+  //   onError: (error) => {
+  //     console.log("error", error);
+  //   },
+  // });
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(function (position) {
-      setLatitude(position.coords.latitude);
-      setLongitude(position.coords.longitude);
-      console.log((position.coords.latitude).toString());
-      console.log((position.coords.longitude).toString());
-    });
-  });
+    // navigator.geolocation.getCurrentPosition(function (position) {
+    //   setLatitude(position.coords.latitude);
+    //   setLongitude(position.coords.longitude);
+    //   console.log((position.coords.latitude).toString());
+    //   console.log((position.coords.longitude).toString());
+    // });
+  }, [data]);
 
   return (
     <Box sx={{ px: 2, py: 'auto' }}>
@@ -190,8 +190,9 @@ const Home: NextPage = () => {
             scanDelay={100}
             onResult={(result, error) => {
               if (result) {
+                // console.log(result);
                 setData(result.getText());
-                getUsersRandom.mutate();
+                // getUsersRandom.mutate();
               } else {
                 console.error(error);
               }
@@ -205,7 +206,7 @@ const Home: NextPage = () => {
             onResult={(result, error) => {
               if (result) {
                 setData(result.getText());
-                getUsersRandom.mutate();
+                // getUsersRandom.mutate();
               } else {
                 console.error(error);
               }
@@ -222,7 +223,7 @@ const Home: NextPage = () => {
           </Box>
         </Box>
         <Box sx={{ textAlign: 'center' }}>
-          {getUsersRandom.isLoading ? <CircularProgress /> :
+          {/* {getUsersRandom.isLoading ? <CircularProgress /> :
             (getUsersRandom.isSuccess || getUsersRandom.isError ?
               <Box>
                 <Box sx={{ mb: 2 }}>
@@ -239,7 +240,13 @@ const Home: NextPage = () => {
                   </Typography>
                 </Box>
               </Box> : null)
-          }
+          } */}
+          <Box>
+            <Typography align={'center'} fontWeight={600} variant={"h6"}>
+              {/* {user.length > 0 ? user[0]?.name.title + ' ' + user[0]?.name.first + ' ' + user[0]?.name.last : 'No Results'} */}
+              {data ? data : 'No Results'}
+            </Typography>
+          </Box>
         </Box>
       </Box>
     </Box>

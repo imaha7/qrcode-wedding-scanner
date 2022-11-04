@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 
-const BASE_URL = "https://randomuser.me/api";
+const BASE_URL = "https://wedding-registration-api.herokuapp.com/api";
 // const BASE_URL = "http://localhost:3010/api/v1";
 
 const request = axios.create({
