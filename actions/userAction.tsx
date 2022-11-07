@@ -9,8 +9,8 @@ export const showUser = async ({ id }: any) => {
     }
 };
 
-export const updateUser = async ({ id, status }: any) => {
-    let response = await axios.patch('/posts/' + id, { status: status });
+export const updateUser = async ({ id, username, name, invited_guests_count, congrats_words, status }: any) => {
+    let response = await axios.patch('/posts/' + id, { username: username, name: name, invited_guests_count: invited_guests_count, congrats_words: congrats_words, status: status });
     try {
         return response.data;
     } catch (error) {

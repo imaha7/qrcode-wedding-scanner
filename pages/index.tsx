@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { QrReader } from 'react-qr-reader';
 import { Box, CircularProgress, FormControlLabel, Switch, SwitchProps, ToggleButton, Typography, styled, useMediaQuery, useTheme } from '@mui/material';
 import { CheckCircle, CloseRounded } from '@mui/icons-material';
-import { updateUser } from "../actions/userAction";
+import { updateUser, showUser } from "../actions/userAction";
 import { useMutation } from "@tanstack/react-query";
 
 const IOSSwitch = styled((props: SwitchProps) => (
@@ -65,13 +65,27 @@ const Home: NextPage = () => {
   const [checked, setChecked] = React.useState(false);
   const [longitude, setLongitude] = React.useState<any>('');
   const [latitude, setLatitude] = React.useState<any>('');
-  const [user, setUser] = React.useState<any>([]);
+  const [user, setUser] = React.useState<any>(null);
 
   const handleChecked = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
   };
 
-  const updateUserRegistration = useMutation((id) => updateUser({ id: id, status: 'attended' }), {
+  const showUserRegistration = useMutation((id) => showUser({ id: id }), {
+    onMutate: (id: any) => {
+      return { id };
+    },
+    onSuccess: (response) => {
+      console.log(response);
+      setUser(response);
+      updateUserRegistration.mutate(response.id);
+    },
+    onError: (error) => {
+      console.log("error", error);
+    },
+  });
+
+  const updateUserRegistration = useMutation((id) => updateUser({ id: id, username: user.username, name: user.name, invited_guests_count: user.invited_guests_count, congrats_words: user.congrats_words, status: 'attended' }), {
     onMutate: (id: any) => {
       return { id };
     },
@@ -91,7 +105,7 @@ const Home: NextPage = () => {
     //   console.log((position.coords.latitude).toString());
     //   console.log((position.coords.longitude).toString());
     // });
-  }, [data]);
+  }, [data, user]);
 
   return (
     <Box sx={{ px: 2, py: 'auto' }}>
@@ -192,7 +206,7 @@ const Home: NextPage = () => {
             onResult={(result, error) => {
               if (result) {
                 setData(result.getText());
-                updateUserRegistration.mutate(parseInt(data));
+                showUserRegistration.mutate(parseInt(data));
               } else {
                 console.error(error);
               }
@@ -206,7 +220,7 @@ const Home: NextPage = () => {
             onResult={(result, error) => {
               if (result) {
                 setData(result.getText());
-                updateUserRegistration.mutate(parseInt(data));
+                showUserRegistration.mutate(parseInt(data));
               } else {
                 console.error(error);
               }
