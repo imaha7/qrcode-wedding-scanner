@@ -76,9 +76,9 @@ const Home: NextPage = () => {
       return { id };
     },
     onSuccess: (response) => {
-      console.log(response);
-      setUser(response);
-      updateUserRegistration.mutate(response.id);
+      console.log(response.data);
+      setUser(response.data);
+      updateUserRegistration.mutate(response.data.id);
     },
     onError: (error) => {
       console.log("error", error);
@@ -90,8 +90,7 @@ const Home: NextPage = () => {
       return { id };
     },
     onSuccess: (response) => {
-      console.log(response);
-      // getUsersRegistration.refetch();
+      console.log(response.data);
     },
     onError: (error) => {
       console.log("error", error);
@@ -235,23 +234,22 @@ const Home: NextPage = () => {
           </Box>
         </Box>
         <Box sx={{ textAlign: 'center' }}>
-          {showUserRegistration.isLoading || updateUserRegistration.isLoading  ? <CircularProgress /> :
-            (updateUserRegistration.isSuccess || updateUserRegistration.isError ?
+          {showUserRegistration.isLoading || updateUserRegistration.isLoading ? <CircularProgress /> :
+            <Box>
+              <Box sx={{ mb: 2 }}>
+                {updateUserRegistration.isSuccess ? <CheckCircle color={'success'} fontSize={'large'} /> : <CloseRounded color={'error'} fontSize={'large'} />}
+              </Box>
               <Box>
-                <Box sx={{ mb: 2 }}>
-                  {updateUserRegistration.isSuccess ? <CheckCircle color={'success'} fontSize={'large'} /> : <CloseRounded color={'error'} fontSize={'large'} />}
-                </Box>
-                <Box>
-                  <Typography align={'center'} fontWeight={600} variant={"h6"}>
-                    {user ? user.name : 'No Results'}
-                  </Typography>
-                </Box>
-                <Box>
-                  <Typography align={'center'} variant={"subtitle1"}>
-                    {updateUserRegistration.isSuccess ? 'Has been attended' : 'Failed to update status, please try again!'}
-                  </Typography>
-                </Box>
-              </Box> : null)
+                <Typography align={'center'} fontWeight={600} variant={"h6"}>
+                  {user ? user.name : 'No Results'}
+                </Typography>
+              </Box>
+              <Box>
+                <Typography align={'center'} variant={"subtitle1"}>
+                  {updateUserRegistration.isSuccess ? 'Has been attended' : 'Failed to update status, please try again!'}
+                </Typography>
+              </Box>
+            </Box>
           }
         </Box>
       </Box>
