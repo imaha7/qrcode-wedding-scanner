@@ -188,7 +188,7 @@ const Home: NextPage = () => {
           {checked ? <QrReader
             key={'user'}
             constraints={{ facingMode: 'user' }}
-            scanDelay={0}
+            scanDelay={100}
             onResult={(result, error) => {
               if (result) {
                 setData(result.getText());
@@ -202,11 +202,11 @@ const Home: NextPage = () => {
           /> : <QrReader
             key={'environment'}
             constraints={{ facingMode: 'environment' }}
-            scanDelay={0}
+            scanDelay={100}
             onResult={(result, error) => {
               if (result) {
                 setData(result.getText());
-                // getUsersRandom.mutate();
+                updateUserRegistration.mutate(parseInt(data));
               } else {
                 console.error(error);
               }
