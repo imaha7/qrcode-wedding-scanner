@@ -237,7 +237,7 @@ const Home: NextPage = () => {
           </Box>
         </Box>
         <Box sx={{ textAlign: 'center' }}>
-          {updateUserRegistration.isLoading ? <CircularProgress /> :
+          {showUserRegistration.isLoading || updateUserRegistration.isLoading  ? <CircularProgress /> :
             (updateUserRegistration.isSuccess || updateUserRegistration.isError ?
               <Box>
                 <Box sx={{ mb: 2 }}>
@@ -245,8 +245,7 @@ const Home: NextPage = () => {
                 </Box>
                 <Box>
                   <Typography align={'center'} fontWeight={600} variant={"h6"}>
-                    {data}
-                    {/* {user.length > 0 ? user[0]?.name.title + ' ' + user[0]?.name.first + ' ' + user[0]?.name.last : 'No Results'} */}
+                    {user ? user.name : 'No Results'}
                   </Typography>
                 </Box>
                 <Box>
