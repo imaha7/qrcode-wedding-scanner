@@ -188,7 +188,7 @@ const Home: NextPage = () => {
           {checked ? <QrReader
             key={'user'}
             constraints={{ facingMode: 'user' }}
-            scanDelay={100}
+            scanDelay={0}
             onResult={(result, error) => {
               if (result) {
                 setData(result.getText());
@@ -202,7 +202,7 @@ const Home: NextPage = () => {
           /> : <QrReader
             key={'environment'}
             constraints={{ facingMode: 'environment' }}
-            scanDelay={100}
+            scanDelay={0}
             onResult={(result, error) => {
               if (result) {
                 setData(result.getText());
@@ -231,7 +231,8 @@ const Home: NextPage = () => {
                 </Box>
                 <Box>
                   <Typography align={'center'} fontWeight={600} variant={"h6"}>
-                    {user.length > 0 ? user[0]?.name.title + ' ' + user[0]?.name.first + ' ' + user[0]?.name.last : 'No Results'}
+                    {data}
+                    {/* {user.length > 0 ? user[0]?.name.title + ' ' + user[0]?.name.first + ' ' + user[0]?.name.last : 'No Results'} */}
                   </Typography>
                 </Box>
                 <Box>
