@@ -235,21 +235,22 @@ const Home: NextPage = () => {
         </Box>
         <Box sx={{ textAlign: 'center' }}>
           {showUserRegistration.isLoading || updateUserRegistration.isLoading ? <CircularProgress /> :
-            <Box>
-              <Box sx={{ mb: 2 }}>
-                {updateUserRegistration.isSuccess ? <CheckCircle color={'success'} fontSize={'large'} /> : <CloseRounded color={'error'} fontSize={'large'} />}
-              </Box>
+            (updateUserRegistration.isSuccess || updateUserRegistration.isError ?
               <Box>
-                <Typography align={'center'} fontWeight={600} variant={"h6"}>
-                  {user ? user.name : 'No Results'}
-                </Typography>
-              </Box>
-              <Box>
-                <Typography align={'center'} variant={"subtitle1"}>
-                  {updateUserRegistration.isSuccess ? 'Has been attended' : 'Failed to update status, please try again!'}
-                </Typography>
-              </Box>
-            </Box>
+                <Box sx={{ mb: 2 }}>
+                  {updateUserRegistration.isSuccess ? <CheckCircle color={'success'} fontSize={'large'} /> : <CloseRounded color={'error'} fontSize={'large'} />}
+                </Box>
+                <Box>
+                  <Typography align={'center'} fontWeight={600} variant={"h6"}>
+                    {user ? user.name : 'No Results'}
+                  </Typography>
+                </Box>
+                <Box>
+                  <Typography align={'center'} variant={"subtitle1"}>
+                    {updateUserRegistration.isSuccess ? 'Has been attended' : 'Failed to update status, please try again!'}
+                  </Typography>
+                </Box>
+              </Box> : null)
           }
         </Box>
       </Box>
