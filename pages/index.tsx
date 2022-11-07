@@ -85,7 +85,7 @@ const Home: NextPage = () => {
     },
   });
 
-  const updateUserRegistration = useMutation((id) => updateUser({ id: id, username: user.username, name: user.name, invited_guests_count: user.invited_guests_count, congrats_words: user.congrats_words, status: 'attended' }), {
+  const updateUserRegistration = useMutation((id) => updateUser({ id: id, username: user.username, name: user.name, invited_guests_count: user.invited_guests_count, status: 'attended' }), {
     onMutate: (id: any) => {
       return { id };
     },
@@ -205,8 +205,7 @@ const Home: NextPage = () => {
             scanDelay={100}
             onResult={(result, error) => {
               if (result) {
-                setData(result.getText());
-                showUserRegistration.mutate(parseInt(data));
+                showUserRegistration.mutate(parseInt(result.getText()));
               } else {
                 console.error(error);
               }
@@ -219,8 +218,7 @@ const Home: NextPage = () => {
             scanDelay={100}
             onResult={(result, error) => {
               if (result) {
-                setData(result.getText());
-                showUserRegistration.mutate(parseInt(data));
+                showUserRegistration.mutate(parseInt(result.getText()));
               } else {
                 console.error(error);
               }
