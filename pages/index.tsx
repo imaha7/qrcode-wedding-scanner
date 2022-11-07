@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { QrReader } from 'react-qr-reader';
 import { Box, CircularProgress, FormControlLabel, Switch, SwitchProps, ToggleButton, Typography, styled, useMediaQuery, useTheme } from '@mui/material';
 import { CheckCircle, CloseRounded } from '@mui/icons-material';
-// import { getUsers } from "../actions/userAction";
+import { updateUser } from "../actions/userAction";
 import { useMutation } from "@tanstack/react-query";
 
 const IOSSwitch = styled((props: SwitchProps) => (
@@ -71,17 +71,18 @@ const Home: NextPage = () => {
     setChecked(event.target.checked);
   };
 
-  // const getUsersRandom = useMutation(() => getUsers(), {
-  //   onMutate: () => {
-  //     return {};
-  //   },
-  //   onSuccess: (response) => {
-  //     setUser(response.results);
-  //   },
-  //   onError: (error) => {
-  //     console.log("error", error);
-  //   },
-  // });
+  const updateUserRegistration = useMutation((id) => updateUser({ id: id, status: 'attended' }), {
+    onMutate: (id: any) => {
+      return { id };
+    },
+    onSuccess: (response) => {
+      console.log(response);
+      // getUsersRegistration.refetch();
+    },
+    onError: (error) => {
+      console.log("error", error);
+    },
+  });
 
   useEffect(() => {
     // navigator.geolocation.getCurrentPosition(function (position) {
@@ -190,9 +191,8 @@ const Home: NextPage = () => {
             scanDelay={100}
             onResult={(result, error) => {
               if (result) {
-                // console.log(result);
                 setData(result.getText());
-                // getUsersRandom.mutate();
+                updateUserRegistration.mutate(parseInt(data));
               } else {
                 console.error(error);
               }
@@ -223,11 +223,11 @@ const Home: NextPage = () => {
           </Box>
         </Box>
         <Box sx={{ textAlign: 'center' }}>
-          {/* {getUsersRandom.isLoading ? <CircularProgress /> :
-            (getUsersRandom.isSuccess || getUsersRandom.isError ?
+          {updateUserRegistration.isLoading ? <CircularProgress /> :
+            (updateUserRegistration.isSuccess || updateUserRegistration.isError ?
               <Box>
                 <Box sx={{ mb: 2 }}>
-                  {getUsersRandom.isSuccess ? <CheckCircle color={'success'} fontSize={'large'} /> : <CloseRounded color={'error'} fontSize={'large'} />}
+                  {updateUserRegistration.isSuccess ? <CheckCircle color={'success'} fontSize={'large'} /> : <CloseRounded color={'error'} fontSize={'large'} />}
                 </Box>
                 <Box>
                   <Typography align={'center'} fontWeight={600} variant={"h6"}>
@@ -236,17 +236,11 @@ const Home: NextPage = () => {
                 </Box>
                 <Box>
                   <Typography align={'center'} variant={"subtitle1"}>
-                    {getUsersRandom.isSuccess ? 'Telah Hadir' : 'Gagal Mengubah Status Hadir, Silahkan Coba Lagi!'}
+                    {updateUserRegistration.isSuccess ? 'Has been attended' : 'Failed to update status, please try again!'}
                   </Typography>
                 </Box>
               </Box> : null)
-          } */}
-          <Box>
-            <Typography align={'center'} fontWeight={600} variant={"h6"}>
-              {/* {user.length > 0 ? user[0]?.name.title + ' ' + user[0]?.name.first + ' ' + user[0]?.name.last : 'No Results'} */}
-              {data}
-            </Typography>
-          </Box>
+          }
         </Box>
       </Box>
     </Box>
