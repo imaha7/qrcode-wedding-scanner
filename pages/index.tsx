@@ -104,7 +104,7 @@ const Home: NextPage = () => {
     //   console.log((position.coords.latitude).toString());
     //   console.log((position.coords.longitude).toString());
     // });
-  }, [data, user]);
+  }, [user]);
 
   return (
     <Box sx={{ px: 2, py: 'auto' }}>
